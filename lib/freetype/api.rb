@@ -4,6 +4,22 @@ require 'freetype/error'
 module FreeType
   # high level API for freetype wrapping by FFI
   module API
+    def library_version
+      library = ::FFI::MemoryPointer.new(:pointer)
+      err = FreeType::C::FT_Init_FreeType(library)
+      raise FreeType::Error.find(err) unless err == 0
+
+      amajor = ::FFI::MemoryPointer.new(:int)
+      aminor = ::FFI::MemoryPointer.new(:int)
+      apatch = ::FFI::MemoryPointer.new(:int)
+      FreeType::C::FT_Library_Version(library.get_pointer(0), amajor, aminor, apatch)
+      "#{amajor.get_int(0)}.#{aminor.get_int(0)}.#{apatch.get_int(0)}"
+    ensure
+      err = FreeType::C::FT_Done_Library(library.get_pointer(0))
+      raise FreeType::Error.find(err) unless err == 0
+    end
+    module_function :library_version
+
     module IOInterface
       def open(*args)
         i = new(*args)
