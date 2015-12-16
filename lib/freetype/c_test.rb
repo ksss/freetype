@@ -47,6 +47,11 @@ module FFITest
       t.error 'miss get values from FT_Library_Version()'
     end
     t.log "freetype version: #{a.join('.')}"
+  ensure
+    err = FT_Done_Library(library.get_pointer(0))
+    if err != 0
+      t.error FreeType::Error.find(err).message
+    end
   end
 
   def test_Face(t)
@@ -62,11 +67,23 @@ module FFITest
         t.fatal FreeType::Error.find(err).message
       end
 
-      face = FT_FaceRec.new(face.get_pointer(0))
-      err = FT_Select_Charmap(face, :FT_ENCODING_UNICODE)
-      if err != 0
-        t.error FreeType::Error.find(err).message
+      begin
+        face = FT_FaceRec.new(face.get_pointer(0))
+        err = FT_Select_Charmap(face, :FT_ENCODING_UNICODE)
+        if err != 0
+          t.error FreeType::Error.find(err).message
+        end
+      ensure
+        err = FT_Done_Face(face)
+        if err != 0
+          t.error FreeType::Error.find(err).message
+        end
       end
+    end
+  ensure
+    err = FT_Done_Library(library.get_pointer(0))
+    if err != 0
+      t.error FreeType::Error.find(err).message
     end
   end
 
