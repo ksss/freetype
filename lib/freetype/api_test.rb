@@ -3,98 +3,91 @@ require 'freetype/api'
 module FreeTypeApiTest
   include FreeType::API
 
-  def libopen
-    Library.open do |lib|
-      ['data/Prida01.otf', 'data/Starjedi.ttf'].each do |font|
-        lib.face_open(font) do |f|
-          f.set_char_size(0, 0, 300, 300)
-          yield f
-        end
+  def font_open
+    ['data/Prida01.otf', 'data/Starjedi.ttf'].each do |font|
+      Font.open(font) do |f|
+        yield f, font
       end
     end
   end
 
-  def test_Library(t)
-    lib = nil
-    ret = Library.open do |l|
-      lib = l
+  def test_library_version(t)
+    v = FreeType::API.library_version
+    unless String === v
+      t.error 'return value was break'
+    end
+    unless /\A\d+.\d+.\d+\z/ =~ v
+      t.error "version format was break got #{v}"
+    end
+  end
 
-      unless /\A\d+\.\d+\.\d+\z/.match l.version
-        t.error "return value break got #{l.version}"
-      end
+  def test_Font(t)
+    font = nil
+    ret = Font.open('data/Prida01.otf') do |f|
+      font = f
 
       :abc
     end
-    if lib.nil?
+    if font.nil?
       t.error('cannot get FT_Library in `open` with block')
     end
     if ret != :abc
       t.error 'want to return last value in block'
     end
-  end
 
-  def test_Face(t)
-    face = nil
-    Library.open do |lib|
-      ['data/Prida01.otf', 'data/Starjedi.ttf'].each do |font|
-        lib.face_open(font) do |f|
-          face = f
-          if f.char_index('a') == 0
-            t.error('ascii char not defined this font')
-          end
-          if f.char_index('㍿') != 0
-            t.error("I don't know why set character was defined in font")
-          end
+    font_open do |f, _font|
+      if f.char_index('a') == 0
+        t.error('ascii char not defined this font')
+      end
+      if f.char_index('㍿') != 0
+        t.error("I don't know why set character was defined in font")
+      end
 
-          v = f.kerning('A', 'W')
-          unless v
-            t.error('#kerning return object was changed')
-          end
-          unless Fixnum === v.x && Fixnum === v.y
-            t.error('Not vector object. Check spec for FT_Get_Kerning()')
-          end
+      v = f.kerning('A', 'W')
+      unless v
+        t.error('#kerning return object was changed')
+      end
+      unless Fixnum === v.x && Fixnum === v.y
+        t.error('Not vector object. Check spec for FT_Get_Kerning()')
+      end
 
-          if /darwin/ =~ RUBY_PLATFORM
-            begin
-              err = StringIO.new
-              origerr = $stderr
-              $stderr = err
-              f.glyph('a')
-            rescue FreeType::Error::Invalid_Size_Handle
-              if err.string.empty?
-                t.error('recommend warn miss?')
-              end
-            else
-              t.error('check freetype spec')
-            ensure
-              $stderr = origerr
-            end
+      if /darwin/ =~ RUBY_PLATFORM
+        begin
+          err = StringIO.new
+          origerr = $stderr
+          $stderr = err
+          f.glyph('a')
+        rescue FreeType::Error::Invalid_Size_Handle
+          if err.string.empty?
+            t.error('recommend warn miss?')
           end
-
-          f.set_char_size(0, 0, 300, 300)
-
-          bbox = f.bbox
-          unless BBox === bbox
-            t.error('FreeType::API::Face#bbox return value was break')
-          end
-
-          unless Glyph === f.glyph('a')
-            t.error 'return value was break'
-          end
-
-          # unless Glyph === f.notdef
-          #   t.error 'return value was break'
-          # end
+        else
+          t.error('check freetype spec')
+        ensure
+          $stderr = origerr
         end
       end
-    end
-    if face.nil?
-      t.error('cannot get FT_Face in `open` with block')
+
+      f.set_char_size(0, 0, 300, 300)
+
+      bbox = f.bbox
+      unless BBox === bbox
+        t.error('FreeType::API::Face#bbox return value was break')
+      end
+
+      unless Glyph === f.glyph('a')
+        t.error 'return value was break'
+      end
+
+      unless Glyph === f.notdef
+        t.error 'return value was break'
+      end
     end
   end
 
   def test_glyph(t)
-    libopen do |f|
+    font_open do |f|
+      f.set_char_size(0, 0, 300, 300)
       table = { 'a' => nil, 'b' => nil, 'c' => nil, 'd' => nil }
       table.each do |char, _|
         glyph = f.glyph(char)
@@ -118,7 +111,8 @@ module FreeTypeApiTest
   end
 
   def test_outline(t)
-    libopen do |f|
+    font_open do |f|
+      f.set_char_size(0, 0, 300, 300)
       table = { 'a' => nil, 'b' => nil, 'c' => nil, 'd' => nil }
       table.each do |char, _|
         outline = f.glyph(char).outline

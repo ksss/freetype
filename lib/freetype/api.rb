@@ -35,58 +35,29 @@ module FreeType
       end
     end
 
-    class Library
+    class Font
       extend IOInterface
       include C
 
-      def initialize
+      def initialize(font_path)
         @library = ::FFI::MemoryPointer.new(:pointer)
         err = FT_Init_FreeType(@library)
         raise FreeType::Error.find(err) unless err == 0
-      end
 
-      def face_open(font)
-        Face.open(pointer, font) do |f|
-          yield f
-        end
-      end
-
-      def pointer
-        @library.get_pointer(0)
-      end
-
-      def version
-        amajor = ::FFI::MemoryPointer.new(:int)
-        aminor = ::FFI::MemoryPointer.new(:int)
-        apatch = ::FFI::MemoryPointer.new(:int)
-        FT_Library_Version(@library.get_pointer(0), amajor, aminor, apatch)
-        "#{amajor.get_int(0)}.#{aminor.get_int(0)}.#{apatch.get_int(0)}"
-      end
-
-      def close
-        err = FT_Done_Library(@library.get_pointer(0))
-        raise FreeType::Error.find(err) unless err == 0
-        @library.free
-      end
-    end
-
-    class Face
-      extend IOInterface
-      include C
-
-      attr_reader :font_path
-      def initialize(library, font_path)
-        @library = library
         @font_path = font_path
-        @outline = nil
+
         f = ::FFI::MemoryPointer.new(:pointer)
-        err = FT_New_Face(@library, @font_path, 0, f)
+        err = FT_New_Face(@library.get_pointer(0), @font_path, 0, f)
         raise FreeType::Error.find(err) unless err == 0
         @face = FT_FaceRec.new(f.get_pointer(0))
       end
 
-      def raw
-        @face
+      def close
+        err = FT_Done_Face(@face)
+        raise FreeType::Error.find(err) unless err == 0
+
+        err = FT_Done_Library(@library.get_pointer(0))
+        raise FreeType::Error.find(err) unless err == 0
       end
 
       def select_charmap(enc_code)
@@ -136,11 +107,6 @@ module FreeType
 
       def kerning_unscaled(before_char, after_char)
         get_kerning(before_char, after_char, :FT_KERNING_UNSCALED)
-      end
-
-      def close
-        err = FT_Done_Face(@face)
-        raise FreeType::Error.find(err) unless err == 0
       end
 
       private
