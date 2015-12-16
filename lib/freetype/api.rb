@@ -188,10 +188,12 @@ module FreeType
       end
 
       def contours
+        return [] if @outline[:n_contours] == 0
         @outline[:contours].get_array_of_short(0, @outline[:n_contours])
       end
 
       def tags
+        return [] if @outline[:n_points] == 0
         @outline[:tags].get_array_of_char(0, @outline[:n_points])
       end
 
@@ -258,7 +260,7 @@ module FreeType
             path << ['L', first_pt.x, -first_pt.y]
           end
         end
-        path << ['z']
+        path << ['z'] if 0 < path.length
 
         path.map { |(command, *args)|
           "#{command}#{args.join(' ')}"
