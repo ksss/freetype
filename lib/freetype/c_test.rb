@@ -63,10 +63,12 @@ module FFITest
 
   def test_FT_Set_Char_Size(t)
     libopen do |face|
-      err = FT_Load_Char(face, 'a'.ord, FreeType::C::FT_LOAD_DEFAULT)
-      e = FreeType::Error.find(err)
-      unless FreeType::Error::Invalid_Size_Handle === e
-        t.fatal 'check freetype spec'
+      if /darwin/ =~ RUBY_PLATFORM
+        err = FT_Load_Char(face, 'a'.ord, FreeType::C::FT_LOAD_DEFAULT)
+        e = FreeType::Error.find(err)
+        unless FreeType::Error::Invalid_Size_Handle === e
+          t.fatal 'check freetype spec'
+        end
       end
 
       err = FT_Set_Char_Size(face, 0, 32, 300, 300)
