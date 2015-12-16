@@ -100,6 +100,10 @@ module FreeType
         FT_Get_Char_Index(@face, char.ord)
       end
 
+      def line_height
+        @face[:size][:metrics][:height]
+      end
+
       def bbox
         bbox = @face[:bbox]
         BBox.new(bbox[:xMin], bbox[:xMax], bbox[:yMin], bbox[:yMax])
