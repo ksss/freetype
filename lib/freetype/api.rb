@@ -58,13 +58,13 @@ module FreeType
       extend IOInterface
       include C
 
-      attr_reader :face
-      def initialize(library, font)
+      attr_reader :font_path
+      def initialize(library, font_path)
         @library = library
-        @font = font
+        @font_path = font_path
         @outline = nil
         f = ::FFI::MemoryPointer.new(:pointer)
-        err = FT_New_Face(@library, @font, 0, f)
+        err = FT_New_Face(@library, @font_path, 0, f)
         raise FreeType::Error.find(err) unless err == 0
         @face = FT_FaceRec.new(f.get_pointer(0))
       end
