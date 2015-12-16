@@ -85,7 +85,7 @@ module FreeType
 
       # TODO: Should be use FT_Get_Glyph
       def notdef
-        glyph("\x00")
+        glyph("\x00".freeze)
       end
 
       # TODO
