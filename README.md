@@ -1,5 +1,7 @@
 # FreeType
 
+[![Build Status](https://travis-ci.org/ksss/freetype.svg?branch=master)](https://travis-ci.org/ksss/freetype)
+
 FreeType is freetype wrapper using by ffi
 
 ## Installation
