@@ -235,6 +235,9 @@ module FreeType
     # id = FT_Get_Char_Index(face, 'A'.ord) -> glyph id or 0 (undefined)
     attach_function :FT_Get_Char_Index, [:pointer, :ulong], :uint
 
+    # err = FT_Get_Glyph_Name(face, 0, buff, 32)
+    attach_function :FT_Get_Glyph_Name, [:pointer, :uint, :pointer, :uint], :FT_Error
+
     # v = FT_Vector.new
     # err = FT_Get_Kerning(face, before_id, id, :FT_KERNING_DEFAULT, v)
     # p v

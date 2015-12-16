@@ -83,6 +83,24 @@ module FFITest
     end
   end
 
+  def test_FT_Get_Glyph_Name(t)
+    libopen do |face|
+      buff = FFI::MemoryPointer.new(:pointer)
+      err = FT_Get_Glyph_Name(face, 0, buff, 0)
+      e = FreeType::Error.find(err)
+      unless FreeType::Error::Invalid_Argument === e
+        t.error e.message
+      end
+      err = FT_Get_Glyph_Name(face, 0, buff, 32)
+      if err != 0
+        t.error FreeType::Error.find(err).message
+      end
+      unless String === buff.get_string(0)
+        t.error 'May buffering miss?'
+      end
+    end
+  end
+
   def test_char(t)
     libopen do |face, _font|
       err = FT_Set_Char_Size(face, 0, 32, 300, 300)
