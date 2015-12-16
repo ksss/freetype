@@ -69,6 +69,10 @@ module FreeType
         @face = FT_FaceRec.new(f.get_pointer(0))
       end
 
+      def raw
+        @face
+      end
+
       def select_charmap(enc_code)
         err = FT_Select_Charmap(@face, enc_code)
         raise FreeType::Error.find(err) unless err == 0
@@ -156,6 +160,10 @@ module FreeType
         @glyph = glyph
       end
 
+      def raw
+        @glyph
+      end
+
       def metrics
         @glyph[:metrics]
       end
@@ -174,6 +182,10 @@ module FreeType
 
       def initialize(outline)
         @outline = outline
+      end
+
+      def raw
+        @outline
       end
 
       def points
