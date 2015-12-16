@@ -12,11 +12,19 @@ module FFITest
 
     FONTS.each do |font|
       face = ::FFI::MemoryPointer.new(:pointer)
-      err = FT_New_Face(library.get_pointer(0), font, 0, face)
-      raise FreeType::Error.find(err) unless err == 0
+      begin
+        err = FT_New_Face(library.get_pointer(0), font, 0, face)
+        raise FreeType::Error.find(err) unless err == 0
 
-      yield FT_FaceRec.new(face.get_pointer(0)), font
+        yield FT_FaceRec.new(face.get_pointer(0)), font
+      ensure
+        err = FT_Done_Face(face.get_pointer(0))
+        raise FreeType::Error.find(err) unless err == 0
+      end
     end
+  ensure
+    err = FT_Done_Library(library.get_pointer(0))
+    raise FreeType::Error.find(err) unless err == 0
   end
 
   def test_Library(t)
