@@ -1,6 +1,6 @@
 # FreeType
 
-FreeType is libfreetype wrapper using by ffi
+FreeType is freetype wrapper using by ffi
 
 ## Installation
 
@@ -86,7 +86,7 @@ Library.open do |lib|
     face.set_char_size(0, 32 * 32, 300, 300)
     outline = face.outline('a')
     p outline.points #=> [#<FreeType::API::Outline tag=-1 x= 10 y=24>, ...]
-    p face.kerning('A', 'W', mode: :unfitted) #=> #<FreeType::API::Vector x=-10 y=0>
+    p face.kerning_unfitted('A', 'W') #=> #<FreeType::API::Vector x=-10 y=0>
   end
 end
 ```
