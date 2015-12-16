@@ -46,6 +46,7 @@ module FFITest
     unless a.all? { |i| Fixnum === i }
       t.error 'miss get values from FT_Library_Version()'
     end
+    t.log "freetype version: #{a.join('.')}"
   end
 
   def test_Face(t)
