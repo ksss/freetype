@@ -80,8 +80,8 @@ module FreeTypeApiTest
           t.error 'return value was break'
         end
 
-        space_width = glyph.space_width
-        unless Fixnum === space_width
+        char_width = glyph.char_width
+        unless Fixnum === char_width
           t.error 'return value was break'
         end
 

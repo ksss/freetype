@@ -159,7 +159,7 @@ module FreeType
         Outline.new(@glyph[:outline])
       end
 
-      def space_width
+      def char_width
         @glyph[:metrics][:horiAdvance]
       end
     end
