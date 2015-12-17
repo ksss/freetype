@@ -80,27 +80,15 @@ raise FreeType::Error.find(err) unless err == 0
 
 ```ruby
 require 'freetype/api'
+# or require 'freetype'
 
 include FreeType::API
 
-Library.open do |lib|
-  lib.face_open('font.ttf') do |face|
-    face.set_char_size(0, 32 * 32, 300, 300)
-    outline = face.outline('a')
-    p outline.points #=> [#<FreeType::API::Outline tag=-1 x= 10 y=24>, ...]
-    p face.kerning_unfitted('A', 'W') #=> #<FreeType::API::Vector x=-10 y=0>
-  end
-end
-```
-
-### Use All
-
-```ruby
-require 'freetype'
-
-FreeType::API::Library.open do |lib|
-  face = FFI::MemoryPointer.new(:pointer)
-  FreeType::C::FT_New_Face(lib.pointer, 'font.otf', 0, face)
+Font.open('font.ttf') do |font|
+  font.set_char_size(0, 32 * 32, 300, 300)
+  outline = font.glyph('a').outline
+  p outline.points #=> [#<FreeType::API::Outline tag=-1 x= 10 y=24>, ...]
+  p font.kerning_unfitted('A', 'W') #=> #<FreeType::API::Vector x=-10 y=0>
 end
 ```
 
