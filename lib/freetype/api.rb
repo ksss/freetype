@@ -147,8 +147,8 @@ module FreeType
         @glyph = glyph
       end
 
-      def raw
-        @glyph
+      def [](key)
+        @glyph[key]
       end
 
       def metrics
@@ -171,8 +171,8 @@ module FreeType
         @outline = outline
       end
 
-      def raw
-        @outline
+      def [](key)
+        @outline[key]
       end
 
       def points
