@@ -39,6 +39,7 @@ module FreeType
       extend IOInterface
       include C
 
+      attr_reader :face
       def initialize(font_path)
         @library = ::FFI::MemoryPointer.new(:pointer)
         err = FT_Init_FreeType(@library)
