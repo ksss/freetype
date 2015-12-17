@@ -51,23 +51,6 @@ module FreeTypeApiTest
         t.error('Not vector object. Check spec for FT_Get_Kerning()')
       end
 
-      if /darwin/ =~ RUBY_PLATFORM
-        begin
-          err = StringIO.new
-          origerr = $stderr
-          $stderr = err
-          f.glyph('a')
-        rescue FreeType::Error::Invalid_Size_Handle
-          if err.string.empty?
-            t.error('recommend warn miss?')
-          end
-        else
-          t.error('check freetype spec')
-        ensure
-          $stderr = origerr
-        end
-      end
-
       f.set_char_size(0, 0, 300, 300)
 
       bbox = f.bbox
