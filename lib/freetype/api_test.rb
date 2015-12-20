@@ -116,6 +116,12 @@ module FreeTypeApiTest
           t.error('Got values miss assigned from ffi')
         end
 
+        begin
+          outline.bold(6)
+        rescue => e
+          t.error "FT_Outline_Embolden was failed with #{e.class}: #{e.message}"
+        end
+
         table[char] = outline.points.map(&:x)
       end
       if table.values.uniq.length != table.length
