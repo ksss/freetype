@@ -232,6 +232,7 @@ module FreeType
     # attach_function :FT_Get_Glyph, [FT_GlyphSlotRec.ptr, :pointer], :FT_Error
     # attach_function :FT_Done_Glyph, [:pointer], :void
 
+    attach_function :FT_Outline_Embolden, [:pointer, :FT_Pos], :FT_Error
     # id = FT_Get_Char_Index(face, 'A'.ord) -> glyph id or 0 (undefined)
     attach_function :FT_Get_Char_Index, [:pointer, :ulong], :uint
 

@@ -114,6 +114,20 @@ module FFITest
     end
   end
 
+  def test_FT_Outline_Embolden(t)
+    libopen do |face|
+      t.error('err') if FT_Set_Char_Size(face, 0, 32, 300, 300) != 0
+      t.error('err') if FT_Load_Char(face, 'a'.ord, FreeType::C::FT_LOAD_DEFAULT) != 0
+      if face[:glyph][:format] != :FT_GLYPH_FORMAT_OUTLINE
+        t.error "cannot call FT_Outline_Embolden() to format: `#{face[:glyph][:format]}'"
+      end
+      err = FT_Outline_Embolden(face[:glyph][:outline], 1 << 6)
+      if err != 0
+        t.error FreeType::Error.find(err).message
+      end
+    end
+  end
+
   def test_char(t)
     libopen do |face, _font|
       err = FT_Set_Char_Size(face, 0, 32, 300, 300)
