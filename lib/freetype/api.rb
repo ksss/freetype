@@ -176,13 +176,11 @@ module FreeType
       end
 
       def points
-        @points ||= begin
-          points = @outline[:n_points].times.map do |i|
-            FT_Vector.new(@outline[:points] + i * FT_Vector.size)
-          end
-          points.zip(tags).map do |(point, tag)|
-            Point.new(tag, point[:x], point[:y])
-          end
+        points = @outline[:n_points].times.map do |i|
+          FT_Vector.new(@outline[:points] + i * FT_Vector.size)
+        end
+        points.zip(tags).map do |(point, tag)|
+          Point.new(tag, point[:x], point[:y])
         end
       end
 
