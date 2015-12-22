@@ -256,6 +256,8 @@ module FreeType
     attach_function :FT_GlyphSlot_Oblique, [FT_GlyphSlotRec.ptr], :void
     attach_function :FT_Outline_Embolden, [:pointer, :FT_Pos], :FT_Error
     attach_function :FT_Outline_Transform, [:pointer, FT_Matrix.ptr], :void
+    attach_function :FT_Outline_Reverse, [:pointer], :void
+
     # id = FT_Get_Char_Index(face, 'A'.ord) -> glyph id or 0 (undefined)
     attach_function :FT_Get_Char_Index, [:pointer, :ulong], :uint
 

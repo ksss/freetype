@@ -147,6 +147,16 @@ module FFITest
     end
   end
 
+  def test_FT_Outline_Reverse(t)
+    libopen do |face|
+      t.error('err') if FT_Set_Char_Size(face, 0, 32, 300, 300) != 0
+      t.error('err') if FT_Load_Char(face, 'a'.ord, FreeType::C::FT_LOAD_DEFAULT) != 0
+      unless FT_Outline_Reverse(face[:glyph][:outline]).nil?
+        t.error 'return value was break'
+      end
+    end
+  end
+
   def test_char(t)
     libopen do |face, _font|
       err = FT_Set_Char_Size(face, 0, 32, 300, 300)
