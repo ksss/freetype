@@ -211,6 +211,19 @@ module FreeType
              charmap: :pointer
     end
 
+    class << self
+      module LazyAttach
+        def attach_function(name, func, args, returns = nil, options = nil)
+          super
+        rescue FFI::NotFoundError
+          define_method(name) do |*|
+            raise NotImplementedError, "`#{name}' is not implemented in this system"
+          end
+        end
+      end
+      prepend LazyAttach
+    end
+
     # library = FFI::MemoryPointer.new(:pointer)
     # err = FT_Init_FreeType(library)
     # err = FT_Done_Library(library.get_pointer(0))
