@@ -123,6 +123,13 @@ module FreeType
              y: :FT_Pos
     end
 
+    class FT_Matrix < ::FFI::Struct
+      layout xx: :FT_Fixed,
+             xy: :FT_Fixed,
+             yx: :FT_Fixed,
+             yy: :FT_Fixed
+    end
+
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_GlyphSlotRec
     class FT_GlyphSlotRec < ::FFI::Struct
       layout library: :pointer,
@@ -235,6 +242,7 @@ module FreeType
     attach_function :FT_GlyphSlot_Embolden, [FT_GlyphSlotRec.ptr], :void
     attach_function :FT_GlyphSlot_Oblique, [FT_GlyphSlotRec.ptr], :void
     attach_function :FT_Outline_Embolden, [:pointer, :FT_Pos], :FT_Error
+    attach_function :FT_Outline_Transform, [:pointer, FT_Matrix.ptr], :void
     # id = FT_Get_Char_Index(face, 'A'.ord) -> glyph id or 0 (undefined)
     attach_function :FT_Get_Char_Index, [:pointer, :ulong], :uint
 
