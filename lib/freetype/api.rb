@@ -143,6 +143,8 @@ module FreeType
     end
 
     class Glyph
+      include C
+
       def initialize(glyph)
         @glyph = glyph
       end
@@ -162,6 +164,15 @@ module FreeType
       def char_width
         @glyph[:metrics][:horiAdvance]
       end
+
+      def bold
+        FT_GlyphSlot_Embolden(@glyph)
+      end
+
+      def oblique
+        FT_GlyphSlot_Oblique(@glyph)
+      end
+      alias italic oblique
     end
 
     class Outline

@@ -89,6 +89,16 @@ module FreeTypeApiTest
         unless Outline === outline
           t.error('FreeType::API::Face#outline return value was break')
         end
+
+        ret = glyph.bold
+        unless ret.nil?
+          t.error SystemCallError.new(FFI.errno).message
+        end
+
+        ret = glyph.italic
+        unless ret.nil?
+          t.error SystemCallError.new(FFI.errno).message
+        end
       end
     end
   end
