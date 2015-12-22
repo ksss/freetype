@@ -204,11 +204,6 @@ module FreeType
         return [] if @outline[:n_points] == 0
         @outline[:tags].get_array_of_char(0, @outline[:n_points])
       end
-
-      def bold(size)
-        err = FT_Outline_Embolden(@outline, 1 << size.to_i)
-        raise FreeType::Error.find(err) unless err == 0
-      end
     end
 
     Point = Struct.new(:tag, :x, :y) do
