@@ -172,7 +172,7 @@ module FreeType
       def oblique
         FT_GlyphSlot_Oblique(@glyph)
       end
-      alias italic oblique
+      alias_method :italic, :oblique
     end
 
     class Outline
