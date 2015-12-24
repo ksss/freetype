@@ -89,7 +89,7 @@ module FreeType
       end
 
       def line_height
-        @face[:size][:metrics][:height]
+        @face[:glyph][:metrics][:vertAdvance]
       end
 
       def bbox

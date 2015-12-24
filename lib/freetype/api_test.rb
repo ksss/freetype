@@ -58,8 +58,16 @@ module FreeTypeApiTest
         t.error('FreeType::API::Face#bbox return value was break')
       end
 
+      unless 0 == f.line_height
+        t.error('Not expected behavior')
+      end
+
       unless Glyph === f.glyph('a')
         t.error 'return value was break'
+      end
+
+      unless 0 < f.line_height
+        t.error('Not expected behavior')
       end
 
       unless Glyph === f.notdef
