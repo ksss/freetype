@@ -58,7 +58,7 @@ module FreeTypeApiTest
         t.error('FreeType::API::Face#bbox return value was break')
       end
 
-      unless 0 == f.line_height
+      unless 0 < f.line_height
         t.error('Not expected behavior')
       end
 
