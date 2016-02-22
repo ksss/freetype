@@ -211,6 +211,15 @@ module FreeType
              charmap: :pointer
     end
 
+    class FT_Outline_Funcs < ::FFI::Struct
+      layout move_to:  callback([FT_Vector.ptr, :pointer], :FT_Error), # FT_Outline_MoveToFunc
+             line_to:  callback([FT_Vector.ptr, :pointer], :FT_Error), # FT_Outline_LineToFunc
+             conic_to: callback([FT_Vector.ptr, FT_Vector.ptr, :pointer], :FT_Error), # FT_Outline_ConicToFunc
+             cubic_to: callback([FT_Vector.ptr, FT_Vector.ptr, FT_Vector.ptr, :pointer], :FT_Error), # FT_Outline_CubicToFunc
+             shift:    :int,
+             delta:    :FT_Pos
+    end
+
     class << self
       module LazyAttach
         def attach_function(name, func, args, returns = nil, options = nil)
@@ -254,6 +263,8 @@ module FreeType
 
     attach_function :FT_GlyphSlot_Embolden, [FT_GlyphSlotRec.ptr], :void
     attach_function :FT_GlyphSlot_Oblique, [FT_GlyphSlotRec.ptr], :void
+
+    attach_function :FT_Outline_Decompose, [FT_Outline.ptr, FT_Outline_Funcs.ptr, :pointer], :FT_Error
     attach_function :FT_Outline_Embolden, [:pointer, :FT_Pos], :FT_Error
     attach_function :FT_Outline_Transform, [:pointer, FT_Matrix.ptr], :void
     attach_function :FT_Outline_Reverse, [:pointer], :void

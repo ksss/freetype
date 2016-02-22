@@ -134,6 +134,10 @@ module FreeTypeApiTest
           t.error('Got values miss assigned from ffi')
         end
 
+        unless outline.svg_path_data.empty?.!
+          t.error('Could not get svg path data form outline')
+        end
+
         table[char] = outline.points.map(&:x)
       end
       if table.values.uniq.length != table.length

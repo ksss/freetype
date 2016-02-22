@@ -114,6 +114,39 @@ module FFITest
     end
   end
 
+  def test_FT_Outline_Decompose(t)
+    libopen do |face|
+      t.error('err') if FT_Set_Char_Size(face, 0, 32, 300, 300) != 0
+      t.error('err') if FT_Load_Char(face, 'a'.ord, FreeType::C::FT_LOAD_DEFAULT) != 0
+
+      vectors = []
+      outline_funcs = FT_Outline_Funcs.new
+      outline_funcs[:move_to] = Proc.new { |to|
+        vectors << ['M', to[:x], to[:y]]
+        0
+      }
+      outline_funcs[:line_to] = Proc.new { |to|
+        vectors << ['L', to[:x], to[:y]]
+        0
+      }
+      outline_funcs[:conic_to] = Proc.new { |ctrl, to|
+        vectors << ['Q', ctrl[:x], ctrl[:y], to[:x], to[:y]]
+        0
+      }
+      outline_funcs[:cubic_to] = Proc.new { |ctrl1, ctrl2, to|
+        vectors << ['C', ctrl1[:x], ctrl1[:y], ctrl2[:x], ctrl2[:y], to[:x], to[:y]]
+        0
+      }
+      err = FT_Outline_Decompose(face[:glyph][:outline], outline_funcs, nil)
+      if err != 0
+        t.error FreeType::Error.find(err).message
+      end
+      if vectors.empty?
+        t.error "callbacks was not called"
+      end
+    end
+  end
+
   def test_FT_Outline_Embolden(t)
     libopen do |face|
       t.error('err') if FT_Set_Char_Size(face, 0, 32, 300, 300) != 0

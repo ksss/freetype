@@ -204,6 +204,33 @@ module FreeType
         return [] if @outline[:n_points] == 0
         @outline[:tags].get_array_of_char(0, @outline[:n_points])
       end
+
+      def svg_path_data
+        commands = []
+        outline_funcs = FreeType::C::FT_Outline_Funcs.new
+        outline_funcs[:move_to] = proc do |to|
+          commands << [:M, to[:x], -to[:y]]
+          0
+        end
+        outline_funcs[:line_to] = proc do |to|
+          commands << [:L, to[:x], -to[:y]]
+          0
+        end
+        outline_funcs[:conic_to] = proc do |ctrl, to|
+          commands << [:Q, ctrl[:x], -ctrl[:y], to[:x], -to[:y]]
+          0
+        end
+        outline_funcs[:cubic_to] = proc do |ctrl1, ctrl2, to|
+          commands << [:C, ctrl1[:x], -ctrl1[:y], ctrl2[:x], -ctrl2[:y], to[:x], -to[:y]]
+          0
+        end
+        err = FreeType::C::FT_Outline_Decompose(@outline, outline_funcs, nil)
+        if err != 0
+          raise FreeType::Error.find(err)
+        end
+        commands << [:Z] if commands.empty?.!
+        commands
+      end
     end
 
     Point = Struct.new(:tag, :x, :y) do
