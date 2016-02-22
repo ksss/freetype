@@ -78,43 +78,43 @@ module FreeType
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Bitmap
     class FT_Bitmap < ::FFI::Struct
-      layout rows: :uint,
-             width: :uint,
-             pitch: :int,
-             buffer: :pointer,
-             num_grays: :ushort,
-             pixel_mode: :char,
+      layout rows:         :uint,
+             width:        :uint,
+             pitch:        :int,
+             buffer:       :pointer,
+             num_grays:    :ushort,
+             pixel_mode:   :char,
              palette_mode: :char,
-             palette: :pointer
+             palette:      :pointer
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Generic
     class FT_Generic < ::FFI::Struct
-      layout data: :pointer,
+      layout data:      :pointer,
              finalizer: :pointer
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_Glyph_Metrics
     class FT_Glyph_Metrics < ::FFI::Struct
-      layout width: :FT_Pos,
-             height: :FT_Pos,
+      layout width:        :FT_Pos,
+             height:       :FT_Pos,
              horiBearingX: :FT_Pos,
              horiBearingY: :FT_Pos,
-             horiAdvance: :FT_Pos,
+             horiAdvance:  :FT_Pos,
              vertBearingX: :FT_Pos,
              vertBearingY: :FT_Pos,
-             vertAdvance: :FT_Pos
+             vertAdvance:  :FT_Pos
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-outline_processing.html#FT_Outline
     class FT_Outline < ::FFI::Struct
       layout n_contours: :short,
-             n_points: :short,
-             points: :pointer, # FT_Vector* (n_points)
-             tags: :pointer, # char * (n_points)
-             contours: :pointer, # short * (n_contours)
+             n_points:   :short,
+             points:     :pointer, # FT_Vector* (n_points)
+             tags:       :pointer, # char * (n_points)
+             contours:   :pointer, # short * (n_contours)
              # http://www.freetype.org/freetype2/docs/reference/ft2-outline_processing.html#FT_OUTLINE_XXX
-             flags: :int
+             flags:      :int
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Vector
@@ -132,83 +132,83 @@ module FreeType
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_GlyphSlotRec
     class FT_GlyphSlotRec < ::FFI::Struct
-      layout library: :pointer,
-             face: :pointer,
-             next: :pointer,
-             reserved: :uint,
-             generic: FT_Generic,
-             metrics: FT_Glyph_Metrics,
+      layout library:           :pointer,
+             face:              :pointer,
+             next:              :pointer,
+             reserved:          :uint,
+             generic:           FT_Generic,
+             metrics:           FT_Glyph_Metrics,
              linearHoriAdvance: :FT_Fixed,
              linearVertAdvance: :FT_Fixed,
-             advance: FT_Vector,
-             format: FT_Glyph_Format,
-             bitmap: FT_Bitmap,
-             bitmap_left: :int,
-             bitmap_top: :int,
-             outline: FT_Outline,
-             num_subglyphs: :uint,
-             subglyphs: :pointer, # FT_SubGlyph
-             control_data: :pointer, # void *
-             control_len: :long,
-             lsb_delta: :FT_Pos,
-             rsb_delta: :FT_Pos,
-             other: :pointer, # void *
-             internal: :pointer #  FT_Slot_Internal
+             advance:           FT_Vector,
+             format:            FT_Glyph_Format,
+             bitmap:            FT_Bitmap,
+             bitmap_left:       :int,
+             bitmap_top:        :int,
+             outline:           FT_Outline,
+             num_subglyphs:     :uint,
+             subglyphs:         :pointer, # FT_SubGlyph
+             control_data:      :pointer, # void *
+             control_len:       :long,
+             lsb_delta:         :FT_Pos,
+             rsb_delta:         :FT_Pos,
+             other:             :pointer, # void *
+             internal:          :pointer #  FT_Slot_Internal
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_Size_Metrics
     class FT_Size_Metrics < ::FFI::Struct
-      layout x_ppem: :ushort,
-             y_ppem: :ushort,
-             x_scale: :FT_Fixed,
-             y_scale: :FT_Fixed,
-             ascender: :FT_Pos,
-             descender: :FT_Pos,
-             height: :FT_Pos,
+      layout x_ppem:      :ushort,
+             y_ppem:      :ushort,
+             x_scale:     :FT_Fixed,
+             y_scale:     :FT_Fixed,
+             ascender:    :FT_Pos,
+             descender:   :FT_Pos,
+             height:      :FT_Pos,
              max_advance: :FT_Pos
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_SizeRec
     class FT_SizeRec < ::FFI::Struct
-      layout face: :pointer, # FT_Face
-             generic: FT_Generic,
-             metrics: FT_Size_Metrics,
+      layout face:     :pointer, # FT_Face
+             generic:  FT_Generic,
+             metrics:  FT_Size_Metrics,
              internal: :pointer # FT_Size_Internal
     end
 
     class FT_CharMapRec < ::FFI::Struct
-      layout face: :pointer,
-             encoding: FT_Encoding,
+      layout face:        :pointer,
+             encoding:    FT_Encoding,
              platform_id: :ushort,
              encoding_id: :ushort
     end
 
     # http://www.freetype.org/freetype2/docs/reference/ft2-base_interface.html#FT_FaceRec
     class FT_FaceRec < ::FFI::Struct
-      layout num_faces: :long,
-             face_index: :long,
-             face_flags: :long,
-             style_flags: :long,
-             num_glyphs: :long,
-             family_name: :string,
-             style_name: :string,
-             num_fixed_sizes: :int,
-             available_sizes: :pointer, # FT_Bitmap_Size*
-             num_charmaps: :int,
-             charmaps: FT_CharMapRec.ptr,
-             generic: FT_Generic,
-             bbox: FT_BBox,
-             units_per_EM: :ushort,
-             ascender: :short,
-             descender: :short,
-             height: :short,
-             max_advance_width: :short,
-             max_advance_height: :short,
-             underline_position: :short,
+      layout num_faces:           :long,
+             face_index:          :long,
+             face_flags:          :long,
+             style_flags:         :long,
+             num_glyphs:          :long,
+             family_name:         :string,
+             style_name:          :string,
+             num_fixed_sizes:     :int,
+             available_sizes:     :pointer, # FT_Bitmap_Size*
+             num_charmaps:        :int,
+             charmaps:            FT_CharMapRec.ptr,
+             generic:             FT_Generic,
+             bbox:                FT_BBox,
+             units_per_EM:        :ushort,
+             ascender:            :short,
+             descender:           :short,
+             height:              :short,
+             max_advance_width:   :short,
+             max_advance_height:  :short,
+             underline_position:  :short,
              underline_thickness: :short,
-             glyph: FT_GlyphSlotRec.ptr,
-             size: FT_SizeRec.ptr,
-             charmap: :pointer
+             glyph:               FT_GlyphSlotRec.ptr,
+             size:                FT_SizeRec.ptr,
+             charmap:             :pointer
     end
 
     class FT_Outline_Funcs < ::FFI::Struct
