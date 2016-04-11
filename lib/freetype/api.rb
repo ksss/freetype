@@ -224,6 +224,8 @@ module FreeType
           commands << [:C, ctrl1[:x], -ctrl1[:y], ctrl2[:x], -ctrl2[:y], to[:x], -to[:y]]
           0
         end
+        outline_funcs[:shift] = 0
+        outline_funcs[:delta] = 0
         err = FreeType::C::FT_Outline_Decompose(@outline, outline_funcs, nil)
         if err != 0
           raise FreeType::Error.find(err)
